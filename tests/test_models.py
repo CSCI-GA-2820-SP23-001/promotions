@@ -28,7 +28,7 @@ import logging
 import unittest
 from datetime import date
 from werkzeug.exceptions import NotFound
-from service.models import Promotion, Gender, DataValidationError, db
+from service.models import Promotion, Promotype, DataValidationError, db
 from service import app
 from tests.factories import PromotionFactory
 
@@ -74,25 +74,25 @@ class TestPromotionModel(unittest.TestCase):
     def test_create_a_promotion(self):
         """It should Create a promotion and assert that it exists"""
         promotion = Promotion(name="Fido", category="dog",
-                              available=True, gender=Gender.MALE)
+                              available=True, promotype=Promotype.BUYONEGETONEFREE)
         self.assertEqual(str(promotion), "<Promotion Fido id=[None]>")
         self.assertTrue(promotion is not None)
         self.assertEqual(promotion.id, None)
         self.assertEqual(promotion.name, "Fido")
         self.assertEqual(promotion.category, "dog")
         self.assertEqual(promotion.available, True)
-        self.assertEqual(promotion.gender, Gender.MALE)
+        self.assertEqual(promotion.promotype, Promotype.BUYONEGETONEFREE)
         promotion = Promotion(name="Fido", category="dog",
-                              available=False, gender=Gender.FEMALE)
+                              available=False, promotype=Promotype.GET20PERCENTOFF)
         self.assertEqual(promotion.available, False)
-        self.assertEqual(promotion.gender, Gender.FEMALE)
+        self.assertEqual(promotion.promotype, Promotype.GET20PERCENTOFF)
 
     def test_add_a_promotion(self):
         """It should Create a promotion and add it to the database"""
         promotions = Promotion.all()
         self.assertEqual(promotions, [])
         promotion = Promotion(name="Fido", category="dog",
-                              available=True, gender=Gender.MALE)
+                              available=True, promotype=Promotype.BUYONEGETONEFREE)
         self.assertTrue(promotion is not None)
         self.assertEqual(promotion.id, None)
         promotion.create()
@@ -176,11 +176,8 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(data["category"], promotion.category)
         self.assertIn("available", data)
         self.assertEqual(data["available"], promotion.available)
-        self.assertIn("gender", data)
-        self.assertEqual(data["gender"], promotion.gender.name)
-        self.assertIn("birthday", data)
-        self.assertEqual(date.fromisoformat(
-            data["birthday"]), promotion.birthday)
+        self.assertIn("promotype", data)
+        self.assertEqual(data["promotype"], promotion.promotype.name)
 
     def test_deserialize_a_promotion(self):
         """It should de-serialize a Promotion"""
@@ -192,9 +189,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.name, data["name"])
         self.assertEqual(promotion.category, data["category"])
         self.assertEqual(promotion.available, data["available"])
-        self.assertEqual(promotion.gender.name, data["gender"])
-        self.assertEqual(promotion.birthday,
-                         date.fromisoformat(data["birthday"]))
+        self.assertEqual(promotion.promotype.name, data["promotype"])
 
     def test_deserialize_missing_data(self):
         """It should not deserialize a Promotion with missing data"""
@@ -216,11 +211,11 @@ class TestPromotionModel(unittest.TestCase):
         promotion = Promotion()
         self.assertRaises(DataValidationError, promotion.deserialize, data)
 
-    def test_deserialize_bad_gender(self):
-        """It should not deserialize a bad gender attribute"""
+    def test_deserialize_bad_promotype(self):
+        """It should not deserialize a bad promotype attribute"""
         test_promotion = PromotionFactory()
         data = test_promotion.serialize()
-        data["gender"] = "male"  # wrong case
+        data["promotype"] = "male"  # wrong case
         promotion = Promotion()
         self.assertRaises(DataValidationError, promotion.deserialize, data)
 
@@ -238,8 +233,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.id, promotions[1].id)
         self.assertEqual(promotion.name, promotions[1].name)
         self.assertEqual(promotion.available, promotions[1].available)
-        self.assertEqual(promotion.gender, promotions[1].gender)
-        self.assertEqual(promotion.birthday, promotions[1].birthday)
+        self.assertEqual(promotion.promotype, promotions[1].promotype)
 
     def test_find_by_category(self):
         """It should Find Promotions by Category"""
@@ -280,18 +274,18 @@ class TestPromotionModel(unittest.TestCase):
         for promotion in found:
             self.assertEqual(promotion.available, available)
 
-    def test_find_by_gender(self):
-        """It should Find Promotions by Gender"""
+    def test_find_by_promotype(self):
+        """It should Find Promotions by Promotype"""
         promotions = PromotionFactory.create_batch(10)
         for promotion in promotions:
             promotion.create()
-        gender = promotions[0].gender
+        promotype = promotions[0].promotype
         count = len(
-            [promotion for promotion in promotions if promotion.gender == gender])
-        found = Promotion.find_by_gender(gender)
+            [promotion for promotion in promotions if promotion.promotype == promotype])
+        found = Promotion.find_by_promotype(promotype)
         self.assertEqual(found.count(), count)
         for promotion in found:
-            self.assertEqual(promotion.gender, gender)
+            self.assertEqual(promotion.promotype, promotype)
 
     def test_find_or_404_found(self):
         """It should Find or return 404 not found"""
@@ -304,8 +298,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.id, promotions[1].id)
         self.assertEqual(promotion.name, promotions[1].name)
         self.assertEqual(promotion.available, promotions[1].available)
-        self.assertEqual(promotion.gender, promotions[1].gender)
-        self.assertEqual(promotion.birthday, promotions[1].birthday)
+        self.assertEqual(promotion.promotype, promotions[1].promotype)
 
     def test_find_or_404_not_found(self):
         """It should return 404 not found"""

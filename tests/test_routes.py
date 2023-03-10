@@ -75,7 +75,8 @@ class TestPromotionService(TestCase):
         self.assertEqual(new_promotion["name"], test_promotion.name)
         self.assertEqual(new_promotion["category"], test_promotion.category)
         self.assertEqual(new_promotion["available"], test_promotion.available)
-        self.assertEqual(new_promotion["gender"], test_promotion.gender.name)
+        self.assertEqual(new_promotion["promotype"],
+                         test_promotion.promotype.name)
 
         # Check that the location header was correct
 
@@ -86,4 +87,4 @@ class TestPromotionService(TestCase):
         # self.assertEqual(new_promotion["name"], test_promotion.name)
         # self.assertEqual(new_promotion["category"], test_promotion.category)
         # self.assertEqual(new_promotion["available"], test_promotion.available)
-        # self.assertEqual(new_promotion["gender"], test_promotion.gender.name)
+        # self.assertEqual(new_promotion["promotype"], test_promotion.promotype.name)

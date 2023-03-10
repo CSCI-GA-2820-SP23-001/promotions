@@ -49,11 +49,11 @@ class DataValidationError(Exception):
     """Used for an data validation errors when deserializing"""
 
 
-class Gender(Enum):
-    """Enumeration of valid Promotion Genders"""
+class Promotype(Enum):
+    """Enumeration of valid Promotion Promotypes"""
 
-    MALE = 0
-    FEMALE = 1
+    BUYONEGETONEFREE = 0
+    GET20PERCENTOFF = 1
     UNKNOWN = 3
 
 
@@ -72,10 +72,9 @@ class Promotion(db.Model):
     name = db.Column(db.String(63), nullable=False)
     category = db.Column(db.String(63), nullable=False)
     available = db.Column(db.Boolean(), nullable=False, default=False)
-    gender = db.Column(
-        db.Enum(Gender), nullable=False, server_default=(Gender.UNKNOWN.name)
+    promotype = db.Column(
+        db.Enum(Promotype), nullable=False, server_default=(Promotype.UNKNOWN.name)
     )
-    birthday = db.Column(db.Date(), nullable=False, default=date.today())
 
     ##################################################
     # INSTANCE METHODS
@@ -116,8 +115,7 @@ class Promotion(db.Model):
             "name": self.name,
             "category": self.category,
             "available": self.available,
-            "gender": self.gender.name,  # convert enum to string
-            "birthday": self.birthday.isoformat()
+            "promotype": self.promotype.name,  # convert enum to string
         }
 
     def deserialize(self, data: dict):
@@ -137,8 +135,7 @@ class Promotion(db.Model):
                     + str(type(data["available"]))
                 )
             # create enum from string
-            self.gender = getattr(Gender, data["gender"])
-            self.birthday = date.fromisoformat(data["birthday"])
+            self.promotype = getattr(Promotype, data["promotype"])
         except AttributeError as error:
             raise DataValidationError(
                 "Invalid attribute: " + error.args[0]) from error
@@ -247,15 +244,15 @@ class Promotion(db.Model):
         return cls.query.filter(cls.available == available)
 
     @classmethod
-    def find_by_gender(cls, gender: Gender = Gender.UNKNOWN) -> list:
-        """Returns all Promotions by their Gender
+    def find_by_promotype(cls, promotype: Promotype = Promotype.UNKNOWN) -> list:
+        """Returns all Promotions by their Promotype
 
-        :param gender: values are ['MALE', 'FEMALE', 'UNKNOWN']
+        :param promotype: values are ['BUYONEGETONEFREE', 'GET20PERCENTOFF', 'UNKNOWN']
         :type available: enum
 
         :return: a collection of Promotions that are available
         :rtype: list
 
         """
-        logger.info("Processing gender query for %s ...", gender.name)
-        return cls.query.filter(cls.gender == gender)
+        logger.info("Processing promotype query for %s ...", promotype.name)
+        return cls.query.filter(cls.promotype == promotype)
