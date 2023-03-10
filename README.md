@@ -55,19 +55,6 @@ tests/              - test cases package
 └── test_routes.py  - test suite for service routes
 ```
 
-## Available RESTful endpoints for promotions
-
-
-```text
-Path                    Method          Description
---------------          -------         -----------------------------------------------------
-/promotions             POST            Creates a new promotion
-/promotions/123         GET             Retrieves the promotion with ID = 123
-/promotions/123         PUT             Updates the promotion with ID = 123
-/promotions/123         DELETE          Deletes the promotion with ID = 123
-/promotions             GET             List all the promotions available in the database!
-```
-
 ## License
 
 Copyright (c) John Rofrano. All rights reserved.
