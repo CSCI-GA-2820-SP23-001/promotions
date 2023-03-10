@@ -1,4 +1,4 @@
-# NYU DevOps Project Template
+# NYU DevOps - Team Promotions
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
@@ -54,6 +54,21 @@ tests/              - test cases package
 ├── test_models.py  - test suite for business models
 └── test_routes.py  - test suite for service routes
 ```
+
+## Available RESTful endpoints for promotions
+
+
+```text
+Path                    Method          Description
+--------------          -------         -----------------------------------------------------
+/promotions             POST            Creates a new promotion
+/promotions/123         GET             Retrieves the promotion with ID = 123
+/promotions/123         PUT             Updates the promotion with ID = 123
+/promotions/123         DELETE          Deletes the promotion with ID = 123
+/promotions             GET             List all the promotions available in the database!
+
+```
+
 
 ## License
 
