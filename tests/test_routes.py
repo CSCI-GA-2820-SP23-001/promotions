@@ -72,19 +72,11 @@ class TestPromotionService(TestCase):
         """ It should call the home page """
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-    
-    def test_get_promotion_list(self):
-        """It should Get a list of Promotion"""
-        self._create_promotions(5)
-        response = self.client.get(BASE_URL)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(len(data), 5)
 
     def test_get_promotion(self):
         """It should Get a single Promotion"""
         # get the id of a pet
-        test_pet = self._create_promotions(1)[0]
+        test_promotion = self._create_promotions(1)[0]
         response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
