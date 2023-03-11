@@ -30,7 +30,7 @@ def index():
 
 # Place your REST API code here ...
 ######################################################################
-# ADD A NEW PROMOTION
+# ADD A NEW PET
 ######################################################################
 @app.route("/promotions", methods=["POST"])
 def create_promotions():
@@ -45,28 +45,13 @@ def create_promotions():
     promotion.create()
     message = promotion.serialize()
 
-    location_url = url_for(
-         "get_promotions", promotion_id=promotion.id, _external=True)
+    # location_url = url_for(
+    #     "get_promotions", promotion_id=promotion.id, _external=True)
+    location_url = "uncomment the above line once we have get method"
 
     app.logger.info("Promotion with ID [%s] created.", promotion.id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
-######################################################################
-# RETRIEVE A PROMOTION
-######################################################################
-@app.route("/promotions/<int:promotion_id>", methods=["GET"])
-def get_pets(promotion_id):
-    """
-    Retrieve a single Promotion
-    This endpoint will return a Promotion based on it's id
-    """
-    app.logger.info("Request for promotion with id: %s", promotion_id)
-    promotion = Promotion.find(promotion_id)
-    if not promotion:
-        abort(status.HTTP_404_NOT_FOUND, "Promotion with id '{promotion_id}' was not found.")
-
-    app.logger.info("Returning promotion: %s", promotion.name)
-    return jsonify(promotion.serialize()), status.HTTP_200_OK
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
