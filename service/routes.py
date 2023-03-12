@@ -69,6 +69,30 @@ def get_pets(promotion_id):
     return jsonify(promotion.serialize()), status.HTTP_200_OK
 
 ######################################################################
+# UPDATE AN EXISTING PROMOTION
+######################################################################
+@app.route("/promotions/<int:promotion_id>", methods=["PUT"])
+def update_promotion(promotion_id):
+    """
+    Update a Promotion
+
+    This endpoint will update a Promotion based the body that is posted
+    """
+    app.logger.info("Request to update promotion with id: %s", promotion_id)
+    check_content_type("application/json")
+
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        abort(status.HTTP_404_NOT_FOUND, f"Promotion with id '{promotion_id}' was not found.")
+
+    promotion.deserialize(request.get_json())
+    promotion.id = promotion_id
+    promotion.update()
+
+    app.logger.info("Promotion with ID [%s] updated.", promotion.id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
