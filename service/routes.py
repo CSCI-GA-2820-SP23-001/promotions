@@ -72,7 +72,7 @@ def get_pets(promotion_id):
 # UPDATE AN EXISTING PROMOTION
 ######################################################################
 @app.route("/promotions/<int:promotion_id>", methods=["PUT"])
-def update_promotion(promotion_id):
+def update_promotions(promotion_id):
     """
     Update a Promotion
 
