@@ -129,7 +129,7 @@ class TestPromotionService(TestCase):
         # self.assertEqual(new_promotion["promotype"], test_promotion.promotype.name)
         
     def test_update_promotion(self):
-        """It should Update an existing Pet"""
+        """It should Update an existing Promotion"""
         # create a promotion to update
         test_promotion = PromotionFactory()
         response = self.client.post(BASE_URL, json=test_promotion.serialize())
