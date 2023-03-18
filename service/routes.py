@@ -69,6 +69,28 @@ def get_promotion(promotion_id):
     return jsonify(promotion.serialize()), status.HTTP_200_OK
 
 ######################################################################
+# LIST PROMOTIONS
+######################################################################
+@app.route("/promotions", methods=["GET"])
+def list_promotions():
+    """Returns all of the Promotions"""
+    app.logger.info("Request for Promotion list")
+    promotions = []
+
+    # Process the query string if any
+    name = request.args.get("name")
+    if name:
+        promotions = Promotion.find_by_name(name)
+    else:
+        promotions = Promotion.all()
+
+    # Return as an array of dictionaries
+    results = [promotion.serialize() for promotion in promotions]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
