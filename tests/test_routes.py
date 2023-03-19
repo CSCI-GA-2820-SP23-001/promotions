@@ -98,6 +98,15 @@ class TestPromotionService(TestCase):
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
     
+    def test_delete_promotion(self):
+        '''This should delete a promotion'''
+        test_promotion = self._create_promotions(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        '''Check to see if the promotion was deleted'''
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     def test_create_promotion(self):
         """It should Create a new promotion"""
         test_promotion = PromotionFactory()

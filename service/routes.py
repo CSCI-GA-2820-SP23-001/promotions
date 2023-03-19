@@ -52,6 +52,23 @@ def create_promotions():
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 ######################################################################
+# DELETE A PROMOTION
+######################################################################
+@app.route("/promotions", methods=["DELETE"])
+def delete_promotions(promotion_id):
+    """
+    deletes a Promotion
+    This endpoint will delete a Promotion based on its id
+    """
+    app.logger.info("Request to delete promotion with id: %s", promotion_id)
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        abort(status.HTTP_404_NOT_FOUND, "Promotion with id '{promotion_id}' was not found.")
+    else:
+        promotion.delete()
+    app.logger.info("Promotion with id '%s' deleted.", promotion_id)
+    return "", status.HTTP_204_NO_CONTENT
+######################################################################
 # RETRIEVE A PROMOTION
 ######################################################################
 @app.route("/promotions/<int:promotion_id>", methods=["GET"])
