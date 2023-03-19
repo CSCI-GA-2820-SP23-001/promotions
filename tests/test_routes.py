@@ -104,7 +104,7 @@ class TestPromotionService(TestCase):
         response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(response.data), 0)
-        '''Check to see if the promotion was deleted'''
+        #Check to see if the promotion was deleted
         response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     def test_create_promotion(self):
