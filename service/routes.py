@@ -46,7 +46,7 @@ def create_promotions():
     message = promotion.serialize()
 
     location_url = url_for(
-         "get_promotions", promotion_id=promotion.id, _external=True)
+         "get_promotion", promotion_id=promotion.id, _external=True)
 
     app.logger.info("Promotion with ID [%s] created.", promotion.id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
@@ -55,7 +55,7 @@ def create_promotions():
 # RETRIEVE A PROMOTION
 ######################################################################
 @app.route("/promotions/<int:promotion_id>", methods=["GET"])
-def get_pets(promotion_id):
+def get_promotion(promotion_id):
     """
     Retrieve a single Promotion
     This endpoint will return a Promotion based on it's id
