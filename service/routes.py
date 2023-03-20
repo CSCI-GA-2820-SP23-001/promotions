@@ -52,6 +52,22 @@ def create_promotions():
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 ######################################################################
+# DELETE A PROMOTION
+######################################################################
+@app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
+def delete_promotions(promotion_id):
+    """
+    deletes a Promotion
+    This endpoint will delete a Promotion based on its id
+    """
+    app.logger.info("Request to delete promotion with id: %s", promotion_id)
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        abort(status.HTTP_404_NOT_FOUND, "Promotion with id '{promotion_id}' was not found.")
+    promotion.delete()
+    app.logger.info("Promotion with id '%s' deleted.", promotion_id)
+    return "", status.HTTP_204_NO_CONTENT
+######################################################################
 # RETRIEVE A PROMOTION
 ######################################################################
 @app.route("/promotions/<int:promotion_id>", methods=["GET"])
@@ -91,6 +107,27 @@ def update_promotions(promotion_id):
 
     app.logger.info("Promotion with ID [%s] updated.", promotion.id)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
+    
+######################################################################    
+# LIST PROMOTIONS
+######################################################################
+@app.route("/promotions", methods=["GET"])
+def list_promotions():
+    """Returns all of the Promotions"""
+    app.logger.info("Request for Promotion list")
+    promotions = []
+
+    # Process the query string if any
+    name = request.args.get("name")
+    if name:
+        promotions = Promotion.find_by_name(name)
+    else:
+        promotions = Promotion.all()
+
+    # Return as an array of dictionaries
+    results = [promotion.serialize() for promotion in promotions]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
