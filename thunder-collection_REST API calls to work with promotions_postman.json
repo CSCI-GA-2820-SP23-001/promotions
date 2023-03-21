@@ -1,137 +1,107 @@
 {
-    "info": {
-        "name": "REST API calls to work with promotions",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-        "description": ""
-    },
-    "item": [
+    "client": "Thunder Client",
+    "collectionName": "REST API calls to work with promotions",
+    "dateExported": "2023-03-21T19:59:04.525Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
         {
+            "_id": "4d2d8fd9-760d-43fc-b733-dcff5098b355",
+            "colId": "1e7f1893-cf50-46dd-ad5f-2c121a45c294",
+            "containerId": "",
             "name": "update promotion",
-            "request": {
-                "method": "PUT",
-                "url": {
-                    "raw": "http://127.0.0.1:8000/promotions/1862",
-                    "path": [
-                        "promotions",
-                        "1862"
-                    ],
-                    "protocol": "http",
-                    "host": [
-                        "127",
-                        "0",
-                        "0",
-                        "1"
-                    ],
-                    "port": "8000"
-                },
-                "body": {
-                    "mode": "raw",
-                    "options": {
-                        "raw": {
-                            "language": "json"
-                        }
-                    },
-                    "raw": "{\n  \"available\": true,\n  \"category\": \"a\",\n  \"id\": 1862,\n  \"name\": \"Alice\",\n  \"promotype\": \"BUYONEGETONEFREE\"\n}"
+            "url": "http://127.0.0.1:8000/promotions/{id}",
+            "method": "PUT",
+            "sortNum": 10000,
+            "created": "2023-03-21T01:48:56.620Z",
+            "modified": "2023-03-21T19:22:04.182Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1862",
+                    "isPath": true
                 }
-            }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"available\": true,\n  \"category\": \"a\",\n  \"id\": 1862,\n  \"name\": \"Bob\",\n  \"promotype\": \"BUYONEGETONEFREE\"\n}",
+                "form": []
+            },
+            "tests": []
         },
         {
+            "_id": "65158e21-b7de-48f4-b36f-bdb4a4baa29a",
+            "colId": "1e7f1893-cf50-46dd-ad5f-2c121a45c294",
+            "containerId": "",
             "name": "get promotion(by id)",
-            "request": {
-                "method": "GET",
-                "url": {
-                    "raw": "http://127.0.0.1:8000/promotions/:id",
-                    "query": [],
-                    "variable": [
-                        {
-                            "key": "id",
-                            "value": "1860"
-                        }
-                    ],
-                    "path": [
-                        "promotions",
-                        ":id"
-                    ],
-                    "protocol": "http",
-                    "host": [
-                        "127",
-                        "0",
-                        "0",
-                        "1"
-                    ],
-                    "port": "8000"
+            "url": "http://127.0.0.1:8000/promotions/{id}",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-03-21T01:49:07.523Z",
+            "modified": "2023-03-21T01:50:42.824Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1860",
+                    "isPath": true
                 }
-            }
+            ],
+            "tests": []
         },
         {
+            "_id": "850e5363-d707-4776-ba63-beeb77cbf8e8",
+            "colId": "1e7f1893-cf50-46dd-ad5f-2c121a45c294",
+            "containerId": "",
             "name": "delete promotion",
-            "request": {
-                "method": "DELETE",
-                "url": {
-                    "raw": "http://127.0.0.1:8000/promotions/1861",
-                    "path": [
-                        "promotions",
-                        "1861"
-                    ],
-                    "protocol": "http",
-                    "host": [
-                        "127",
-                        "0",
-                        "0",
-                        "1"
-                    ],
-                    "port": "8000"
+            "url": "http://127.0.0.1:8000/promotions/{id}",
+            "method": "DELETE",
+            "sortNum": 30000,
+            "created": "2023-03-21T01:49:13.764Z",
+            "modified": "2023-03-21T19:35:26.586Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1933",
+                    "isPath": true
                 }
-            }
+            ],
+            "tests": []
         },
         {
+            "_id": "80020723-5320-45af-b6c0-9a9bc74fbd22",
+            "colId": "1e7f1893-cf50-46dd-ad5f-2c121a45c294",
+            "containerId": "",
             "name": "create promotion",
-            "request": {
-                "method": "POST",
-                "url": {
-                    "raw": "http://127.0.0.1:8000/promotions",
-                    "path": [
-                        "promotions"
-                    ],
-                    "protocol": "http",
-                    "host": [
-                        "127",
-                        "0",
-                        "0",
-                        "1"
-                    ],
-                    "port": "8000"
-                },
-                "body": {
-                    "mode": "raw",
-                    "options": {
-                        "raw": {
-                            "language": "json"
-                        }
-                    },
-                    "raw": "{\n    \"available\": false,\n    \"category\": \"a\",\n    \"id\": 1811,\n    \"name\": \"Alice\",\n    \"promotype\": \"BUYONEGETONEFREE\"\n  }"
-                }
-            }
+            "url": "http://127.0.0.1:8000/promotions",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-03-21T01:49:18.245Z",
+            "modified": "2023-03-21T19:50:30.338Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"available\": true,\n  \"category\": \"a\",\n  \"name\": \"Alice\",\n  \"promotype\": \"BUYONEGETONEFREE\"\n}",
+                "form": []
+            },
+            "tests": []
         },
         {
+            "_id": "4f53f5b5-daf6-42da-a855-f72cbea2c56a",
+            "colId": "1e7f1893-cf50-46dd-ad5f-2c121a45c294",
+            "containerId": "",
             "name": "list promotions",
-            "request": {
-                "method": "GET",
-                "url": {
-                    "raw": "http://127.0.0.1:8000/promotions/",
-                    "path": [
-                        "promotions"
-                    ],
-                    "protocol": "http",
-                    "host": [
-                        "127",
-                        "0",
-                        "0",
-                        "1"
-                    ],
-                    "port": "8000"
-                }
-            }
+            "url": "http://127.0.0.1:8000/promotions/",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-03-21T01:49:22.535Z",
+            "modified": "2023-03-21T01:49:22.535Z",
+            "headers": [],
+            "params": [],
+            "tests": []
         }
     ]
 }
