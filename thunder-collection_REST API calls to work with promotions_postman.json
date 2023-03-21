@@ -1,0 +1,137 @@
+{
+    "info": {
+        "name": "REST API calls to work with promotions",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "update promotion",
+            "request": {
+                "method": "PUT",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/promotions/1862",
+                    "path": [
+                        "promotions",
+                        "1862"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"available\": true,\n  \"category\": \"a\",\n  \"id\": 1862,\n  \"name\": \"Alice\",\n  \"promotype\": \"BUYONEGETONEFREE\"\n}"
+                }
+            }
+        },
+        {
+            "name": "get promotion(by id)",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/promotions/:id",
+                    "query": [],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "1860"
+                        }
+                    ],
+                    "path": [
+                        "promotions",
+                        ":id"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                }
+            }
+        },
+        {
+            "name": "delete promotion",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/promotions/1861",
+                    "path": [
+                        "promotions",
+                        "1861"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                }
+            }
+        },
+        {
+            "name": "create promotion",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/promotions",
+                    "path": [
+                        "promotions"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n    \"available\": false,\n    \"category\": \"a\",\n    \"id\": 1811,\n    \"name\": \"Alice\",\n    \"promotype\": \"BUYONEGETONEFREE\"\n  }"
+                }
+            }
+        },
+        {
+            "name": "list promotions",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/promotions/",
+                    "path": [
+                        "promotions"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                }
+            }
+        }
+    ]
+}

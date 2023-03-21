@@ -26,7 +26,6 @@ While debugging just these tests it's convenient to use this:
 import os
 import logging
 import unittest
-from datetime import date
 from werkzeug.exceptions import NotFound
 from service.models import Promotion, Promotype, DataValidationError, db
 from service import app

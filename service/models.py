@@ -30,7 +30,6 @@ available (boolean) - True for promotions that are available for adoption
 """
 import logging
 from enum import Enum
-from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
