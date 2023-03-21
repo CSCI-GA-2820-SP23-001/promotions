@@ -19,7 +19,7 @@ from . import app
 def index():
     """ Root URL response """
     return (
-        "Reminder: return some useful information in json format about the service here",
+        "Status:OK",
         status.HTTP_200_OK,
     )
 
