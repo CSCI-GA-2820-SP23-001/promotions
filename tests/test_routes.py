@@ -12,6 +12,7 @@ from service import app
 from service.models import db, init_db, Promotion
 from service.common import status  # HTTP Status Codes
 from tests.factories import PromotionFactory
+from flask import jsonify
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -76,7 +77,7 @@ class TestPromotionService(TestCase):
     def test_get_promotion_list(self):
         """It should Get a list of Promotion"""
         self._create_promotions(5)
-        response = self.client.get(f"{BASE_URL}/")
+        response = self.client.get(f"{BASE_URL}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 5)
@@ -90,7 +91,7 @@ class TestPromotionService(TestCase):
         # update the promotion
         new_promotion = response.get_json()
         name = new_promotion["name"]
-        response = self.client.get(f"{BASE_URL}/?name={name}")
+        response = self.client.get(f"{BASE_URL}?name={name}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_promotion(self):
@@ -123,7 +124,7 @@ class TestPromotionService(TestCase):
     def test_delete_promotion_not_found(self):
         '''This should test delete promotion not found'''
         response = self.client.delete(f"{BASE_URL}/1")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_create_promotion(self):
         """It should Create a new promotion"""
@@ -154,6 +155,22 @@ class TestPromotionService(TestCase):
         self.assertEqual(new_promotion["available"], test_promotion.available)
         self.assertEqual(new_promotion["promotype"],
                          test_promotion.promotype.name)
+
+    def test_create_promotion_without_JSON(self):
+        """It should not Create a new promotion, instead, give 415 error"""
+        test_promotion = PromotionFactory()
+        logging.debug("Test Promotion: %s", test_promotion.serialize())
+        response = self.client.post(BASE_URL)
+        self.assertEqual(response.status_code,
+                         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_create_promotion_with_bad_JSON(self):
+        """It should not Create a new promotion, instead, give 400 error"""
+        test_promotion = PromotionFactory()
+        logging.debug("Test Promotion: %s", test_promotion.serialize())
+        response = self.client.post(BASE_URL, json="")
+        self.assertEqual(response.status_code,
+                         status.HTTP_400_BAD_REQUEST)
 
     def test_update_promotion(self):
         """It should Update an existing Promotion"""

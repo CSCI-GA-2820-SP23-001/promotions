@@ -19,7 +19,7 @@ from . import app
 def index():
     """ Root URL response """
     return (
-        "Status:OK",
+        jsonify({"status": "OK"}),
         status.HTTP_200_OK,
     )
 
@@ -65,8 +65,7 @@ def delete_promotions(promotion_id):
     app.logger.info("Request to delete promotion with id: %s", promotion_id)
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        abort(status.HTTP_404_NOT_FOUND,
-              "Promotion with id '{promotion_id}' was not found.")
+        return "", status.HTTP_204_NO_CONTENT
     promotion.delete()
     app.logger.info("Promotion with id '%s' deleted.", promotion_id)
     return "", status.HTTP_204_NO_CONTENT
@@ -122,7 +121,7 @@ def update_promotions(promotion_id):
 ######################################################################
 
 
-@app.route("/promotions/", methods=["GET"])
+@app.route("/promotions", methods=["GET"])
 def list_promotions():
     """Returns all of the Promotions"""
     app.logger.info("Request for Promotion list")
