@@ -140,6 +140,49 @@ def list_promotions():
     return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
+# Activate PROMOTIONS
+######################################################################
+
+
+@app.route("/promotions/<int:promotion_id>/activate", methods=["PUT"])
+def activate_promotions(promotion_id):
+    """Activate one Promotion by Promotion ID"""
+    app.logger.info("Request to activate promotion with id: %s", promotion_id)
+
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        abort(status.HTTP_404_NOT_FOUND,
+              f"Promotion with id '{promotion_id}' was not found.")
+
+    promotion.available = True
+    promotion.update()
+
+    app.logger.info("Promotion with ID [%s] updated.", promotion.id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+######################################################################
+# Deactivate PROMOTIONS
+######################################################################
+
+
+@app.route("/promotions/<int:promotion_id>/deactivate", methods=["PUT"])
+def deactivate_promotions(promotion_id):
+    """Deactivate one Promotion by Promotion ID"""
+    app.logger.info(
+        "Request to deactivate promotion with id: %s", promotion_id)
+
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        abort(status.HTTP_404_NOT_FOUND,
+              f"Promotion with id '{promotion_id}' was not found.")
+
+    promotion.available = False
+    promotion.update()
+
+    app.logger.info("Promotion with ID [%s] updated.", promotion.id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
