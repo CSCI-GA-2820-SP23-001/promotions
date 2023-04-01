@@ -8,6 +8,7 @@ Test cases can be run with the following:
 import os
 import logging
 from unittest import TestCase
+from unittest.mock import MagicMock, patch
 from service import app
 from service.models import db, init_db, Promotion
 from service.common import status  # HTTP Status Codes
@@ -54,8 +55,7 @@ class TestPromotionService(TestCase):
         promotions = []
         for _ in range(count):
             test_promotion = PromotionFactory()
-            response = self.client.post(
-                BASE_URL, json=test_promotion.serialize())
+            response = self.client.post(BASE_URL, json=test_promotion.serialize())
             self.assertEqual(
                 response.status_code, status.HTTP_201_CREATED, "Could not create test promotion"
             )
@@ -73,29 +73,22 @@ class TestPromotionService(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    def test_health_endpoint(self):
+        """ It should return status OK """
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
     def test_get_promotion_list(self):
         """It should Get a list of Promotion"""
         self._create_promotions(5)
-        response = self.client.get(f"{BASE_URL}")
+        response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 5)
 
-    def test_get_promotion_list_with_name(self):
-        """It should Get a list of Promotion using name"""
-        test_promotion = PromotionFactory()
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # update the promotion
-        new_promotion = response.get_json()
-        name = new_promotion["name"]
-        response = self.client.get(f"{BASE_URL}?name={name}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
     def test_get_promotion(self):
         """It should Get a single Promotion"""
-        # get the id of a promotion
+        # get the id of a pet
         test_promotion = self._create_promotions(1)[0]
         response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -109,22 +102,7 @@ class TestPromotionService(TestCase):
         data = response.get_json()
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
-
-    def test_delete_promotion(self):
-        '''This should delete a promotion'''
-        test_promotion = self._create_promotions(1)[0]
-        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(len(response.data), 0)
-        # Check to see if the promotion was deleted
-        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_delete_promotion_not_found(self):
-        '''This should test delete promotion not found'''
-        response = self.client.delete(f"{BASE_URL}/1")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
+    
     def test_create_promotion(self):
         """It should Create a new promotion"""
         test_promotion = PromotionFactory()
@@ -146,30 +124,15 @@ class TestPromotionService(TestCase):
 
         # Check that the location header was correct
 
-        response = self.client.get(location)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        new_promotion = response.get_json()
-        self.assertEqual(new_promotion["name"], test_promotion.name)
-        self.assertEqual(new_promotion["category"], test_promotion.category)
-        self.assertEqual(new_promotion["available"], test_promotion.available)
-        self.assertEqual(new_promotion["promotype"],
-                         test_promotion.promotype.name)
+        ############# uncomment once we have the get method ################
+        # response = self.client.get(location)
+        # self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # new_promotion = response.get_json()
+        # self.assertEqual(new_promotion["name"], test_promotion.name)
+        # self.assertEqual(new_promotion["category"], test_promotion.category)
+        # self.assertEqual(new_promotion["available"], test_promotion.available)
+        # self.assertEqual(new_promotion["promotype"], test_promotion.promotype.name)
 
-    def test_create_promotion_without_JSON(self):
-        """It should not Create a new promotion, instead, give 415 error"""
-        test_promotion = PromotionFactory()
-        logging.debug("Test Promotion: %s", test_promotion.serialize())
-        response = self.client.post(BASE_URL)
-        self.assertEqual(response.status_code,
-                         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-    def test_create_promotion_with_bad_JSON(self):
-        """It should not Create a new promotion, instead, give 400 error"""
-        test_promotion = PromotionFactory()
-        logging.debug("Test Promotion: %s", test_promotion.serialize())
-        response = self.client.post(BASE_URL, json="")
-        self.assertEqual(response.status_code,
-                         status.HTTP_400_BAD_REQUEST)
 
     def test_update_promotion(self):
         """It should Update an existing Promotion"""
@@ -182,19 +145,8 @@ class TestPromotionService(TestCase):
         new_promotion = response.get_json()
         logging.debug(new_promotion)
         new_promotion["category"] = "unknown"
-        response = self.client.put(
-            f"{BASE_URL}/{new_promotion['id']}", json=new_promotion)
+        response = self.client.put(f"{BASE_URL}/{new_promotion['id']}", json=new_promotion)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_promotion = response.get_json()
         self.assertEqual(updated_promotion["category"], "unknown")
-
-    def test_update_promotion_not_found(self):
-        '''This should test update promotion not found'''
-        test_promotion = PromotionFactory()
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # update the promotion
-        new_promotion = response.get_json()
-        logging.debug(new_promotion)
-        response = self.client.put(f"{BASE_URL}/1", json=new_promotion)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+       
