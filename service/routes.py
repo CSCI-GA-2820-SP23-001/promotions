@@ -129,8 +129,15 @@ def list_promotions():
 
     # Process the query string if any
     name = request.args.get("name")
+    category = request.args.get("category")
+    promotype = request.args.get("promotype")
+    available = request.args.get("available")
     if name:
         promotions = Promotion.find_by_name(name)
+    elif category:
+        promotions = Promotion.find_by_category(category)
+    elif available:
+        promotions = Promotion.find_by_availability(available)
     else:
         promotions = Promotion.all()
 
