@@ -29,6 +29,14 @@ def index():
 ######################################################################
 
 # Place your REST API code here ...
+
+@app.route("/health", methods = ["GET"])
+def health_endpoint():
+    """ Make a GET request to the /health endpoint of the service """
+    return (
+        jsonify({"status": "OK"}),
+        status.HTTP_200_OK,
+    )
 ######################################################################
 # ADD A NEW PROMOTION
 ######################################################################
