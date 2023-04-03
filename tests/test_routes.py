@@ -73,6 +73,11 @@ class TestPromotionService(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    def test_health_endpoint(self):
+        """ It should return status OK """
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_get_promotion_list(self):
         """It should Get a list of Promotion"""
         self._create_promotions(5)
