@@ -1,9 +1,7 @@
 """
 Test Error Handlers Test Suite
 """
-import logging
 from unittest import TestCase
-from service.common import error_handlers
 
 ######################################################################
 #  T E S T   C A S E S

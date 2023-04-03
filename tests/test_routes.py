@@ -198,3 +198,51 @@ class TestPromotionService(TestCase):
         logging.debug(new_promotion)
         response = self.client.put(f"{BASE_URL}/1", json=new_promotion)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_activate_promotions(self):
+        '''This should test activating promotions using non-CRUD route'''
+        test_promotion = PromotionFactory()
+        test_promotion.available = False
+        logging.debug(test_promotion)
+
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        new_promotion = response.get_json()
+
+        response = self.client.put(
+            f"{BASE_URL}/{new_promotion['id']}/activate")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        updated_promotion = response.get_json()
+
+        self.assertEqual(updated_promotion["available"], True)
+
+        # testing activating a non existent promotion
+        response = self.client.put(f"{BASE_URL}/0/activate")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_deactivate_promotions(self):
+        '''This should test deactivating promotions using non-CRUD route'''
+        test_promotion = PromotionFactory()
+        test_promotion.available = True
+        logging.debug(test_promotion)
+
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        new_promotion = response.get_json()
+
+        response = self.client.put(
+            f"{BASE_URL}/{new_promotion['id']}/deactivate")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        updated_promotion = response.get_json()
+
+        self.assertEqual(updated_promotion["available"], False)
+
+        # testing deactivating a non existent promotion
+        response = self.client.put(f"{BASE_URL}/0/deactivate")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
