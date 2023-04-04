@@ -90,7 +90,8 @@ class TestPromotionService(TestCase):
         """It should Query Promotions by name"""
         promotions = self._create_promotions(10)
         test_name = promotions[0].name
-        name_promotions = [promotion for promotion in promotions if promotion.name == test_name]
+        name_promotions = [
+            promotion for promotion in promotions if promotion.name == test_name]
         response = self.client.get(
             BASE_URL,
             query_string=f"name={test_name}"
@@ -106,7 +107,8 @@ class TestPromotionService(TestCase):
         """It should Query Promotions by category"""
         promotions = self._create_promotions(10)
         test_category = promotions[0].category
-        category_promotions = [promotion for promotion in promotions if promotion.category == test_category]
+        category_promotions = [
+            promotion for promotion in promotions if promotion.category == test_category]
         response = self.client.get(
             BASE_URL,
             query_string=f"category={test_category}"
@@ -122,7 +124,8 @@ class TestPromotionService(TestCase):
         """It should Query Promotions by available"""
         promotions = self._create_promotions(10)
         test_available = promotions[0].available
-        available_promotions = [promotion for promotion in promotions if promotion.available == test_available]
+        available_promotions = [
+            promotion for promotion in promotions if promotion.available == test_available]
         response = self.client.get(
             BASE_URL,
             query_string=f"available={test_available}"
@@ -196,7 +199,7 @@ class TestPromotionService(TestCase):
         self.assertEqual(new_promotion["promotype"],
                          test_promotion.promotype.name)
 
-    def test_create_promotion_without_JSON(self):
+    def test_create_promotion_without_json(self):
         """It should not Create a new promotion, instead, give 415 error"""
         test_promotion = PromotionFactory()
         logging.debug("Test Promotion: %s", test_promotion.serialize())
@@ -204,7 +207,7 @@ class TestPromotionService(TestCase):
         self.assertEqual(response.status_code,
                          status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
-    def test_create_promotion_with_bad_JSON(self):
+    def test_create_promotion_with_bad_json(self):
         """It should not Create a new promotion, instead, give 400 error"""
         test_promotion = PromotionFactory()
         logging.debug("Test Promotion: %s", test_promotion.serialize())
