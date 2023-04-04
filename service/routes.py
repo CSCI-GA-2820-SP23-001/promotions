@@ -17,7 +17,7 @@ from . import app
 ######################################################################
 @app.route("/")
 def index():
-    """ Root URL response """
+    """Root URL response"""
     return (
         jsonify({"status": "OK"}),
         status.HTTP_200_OK,
@@ -28,18 +28,24 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
+
 # Place your REST API code here ...
 
-@app.route("/health", methods = ["GET"])
+
+@app.route("/health", methods=["GET"])
 def health_endpoint():
-    """ Make a GET request to the /health endpoint of the service """
+    """Make a GET request to the /health endpoint of the service"""
     return (
         jsonify({"status": "OK"}),
         status.HTTP_200_OK,
     )
+
+
 ######################################################################
 # ADD A NEW PROMOTION
 ######################################################################
+
+
 @app.route("/promotions", methods=["POST"])
 def create_promotions():
     """
@@ -53,11 +59,11 @@ def create_promotions():
     promotion.create()
     message = promotion.serialize()
 
-    location_url = url_for(
-        "get_promotion", promotion_id=promotion.id, _external=True)
+    location_url = url_for("get_promotion", promotion_id=promotion.id, _external=True)
 
     app.logger.info("Promotion with ID [%s] created.", promotion.id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+
 
 ######################################################################
 # DELETE A PROMOTION
@@ -77,6 +83,8 @@ def delete_promotions(promotion_id):
     promotion.delete()
     app.logger.info("Promotion with id '%s' deleted.", promotion_id)
     return "", status.HTTP_204_NO_CONTENT
+
+
 ######################################################################
 # RETRIEVE A PROMOTION
 ######################################################################
@@ -91,11 +99,14 @@ def get_promotion(promotion_id):
     app.logger.info("Request for promotion with id: %s", promotion_id)
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        abort(status.HTTP_404_NOT_FOUND,
-              "Promotion with id '{promotion_id}' was not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            "Promotion with id '{promotion_id}' was not found.",
+        )
 
     app.logger.info("Returning promotion: %s", promotion.name)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # UPDATE AN EXISTING PROMOTION
@@ -114,8 +125,10 @@ def update_promotions(promotion_id):
 
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        abort(status.HTTP_404_NOT_FOUND,
-              f"Promotion with id '{promotion_id}' was not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
 
     promotion.deserialize(request.get_json())
     promotion.id = promotion_id
@@ -123,6 +136,7 @@ def update_promotions(promotion_id):
 
     app.logger.info("Promotion with ID [%s] updated.", promotion.id)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # LIST PROMOTIONS
@@ -138,7 +152,6 @@ def list_promotions():
     # Process the query string if any
     name = request.args.get("name")
     category = request.args.get("category")
-    promotype = request.args.get("promotype")
     available = request.args.get("available")
     if name:
         promotions = Promotion.find_by_name(name)
@@ -154,6 +167,7 @@ def list_promotions():
 
     return make_response(jsonify(results), status.HTTP_200_OK)
 
+
 ######################################################################
 # Activate PROMOTIONS
 ######################################################################
@@ -166,14 +180,17 @@ def activate_promotions(promotion_id):
 
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        abort(status.HTTP_404_NOT_FOUND,
-              f"Promotion with id '{promotion_id}' was not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
 
     promotion.available = True
     promotion.update()
 
     app.logger.info("Promotion with ID [%s] updated.", promotion.id)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # Deactivate PROMOTIONS
@@ -183,19 +200,21 @@ def activate_promotions(promotion_id):
 @app.route("/promotions/<int:promotion_id>/deactivate", methods=["PUT"])
 def deactivate_promotions(promotion_id):
     """Deactivate one Promotion by Promotion ID"""
-    app.logger.info(
-        "Request to deactivate promotion with id: %s", promotion_id)
+    app.logger.info("Request to deactivate promotion with id: %s", promotion_id)
 
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        abort(status.HTTP_404_NOT_FOUND,
-              f"Promotion with id '{promotion_id}' was not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
 
     promotion.available = False
     promotion.update()
 
     app.logger.info("Promotion with ID [%s] updated.", promotion.id)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
@@ -214,8 +233,7 @@ def check_content_type(content_type):
     if request.headers["Content-Type"] == content_type:
         return
 
-    app.logger.error("Invalid Content-Type: %s",
-                     request.headers["Content-Type"])
+    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
     abort(
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
         f"Content-Type must be {content_type}",

@@ -136,15 +136,15 @@ class Promotion(db.Model):
             # create enum from string
             self.promotype = getattr(Promotype, data["promotype"])
         except AttributeError as error:
-            raise DataValidationError(
-                "Invalid attribute: " + error.args[0]) from error
+            raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
             raise DataValidationError(
-                "Invalid promotion: missing " + error.args[0]) from error
+                "Invalid promotion: missing " + error.args[0]
+            ) from error
         except TypeError as error:
             raise DataValidationError(
-                "Invalid promotion: body of request contained bad or no data " +
-                str(error)
+                "Invalid promotion: body of request contained bad or no data "
+                + str(error)
             ) from error
         return self
 
