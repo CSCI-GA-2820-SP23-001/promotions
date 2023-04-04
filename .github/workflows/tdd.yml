@@ -48,7 +48,6 @@ jobs:
           if grep -q "flake8" requirements.txt; then pip install flake8; fi
           pip install pylint
           pip install flask
-          pip install flask_sqlalchemy
       
       - name: Linting
         run: |
