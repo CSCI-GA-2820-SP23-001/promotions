@@ -73,6 +73,11 @@ class TestPromotionService(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    def test_health_endpoint(self):
+        """ It should return status OK """
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_get_promotion_list(self):
         """It should Get a list of Promotion"""
         self._create_promotions(5)
@@ -82,16 +87,52 @@ class TestPromotionService(TestCase):
         self.assertEqual(len(data), 5)
 
     def test_get_promotion_list_with_name(self):
-        """It should Get a list of Promotion using name"""
-        test_promotion = PromotionFactory()
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # update the promotion
-        new_promotion = response.get_json()
-        name = new_promotion["name"]
-        response = self.client.get(f"{BASE_URL}?name={name}")
+        """It should Query Promotions by name"""
+        promotions = self._create_promotions(10)
+        test_name = promotions[0].name
+        name_promotions = [promotion for promotion in promotions if promotion.name == test_name]
+        response = self.client.get(
+            BASE_URL,
+            query_string=f"name={test_name}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(name_promotions))
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["name"], test_name)
+
+    def test_get_promotion_list_with_category(self):
+        """It should Query Promotions by category"""
+        promotions = self._create_promotions(10)
+        test_category = promotions[0].category
+        category_promotions = [promotion for promotion in promotions if promotion.category == test_category]
+        response = self.client.get(
+            BASE_URL,
+            query_string=f"category={test_category}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(category_promotions))
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["category"], test_category)
+
+    def test_get_promotion_list_with_available(self):
+        """It should Query Promotions by available"""
+        promotions = self._create_promotions(10)
+        test_available = promotions[0].available
+        available_promotions = [promotion for promotion in promotions if promotion.available == test_available]
+        response = self.client.get(
+            BASE_URL,
+            query_string=f"available={test_available}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(available_promotions))
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["available"], test_available)
 
     def test_get_promotion(self):
         """It should Get a single Promotion"""

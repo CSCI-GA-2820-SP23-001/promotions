@@ -30,6 +30,14 @@ def index():
 
 
 # Place your REST API code here ...
+
+@app.route("/health", methods = ["GET"])
+def health_endpoint():
+    """ Make a GET request to the /health endpoint of the service """
+    return (
+        jsonify({"status": "OK"}),
+        status.HTTP_200_OK,
+    )
 ######################################################################
 # ADD A NEW PROMOTION
 ######################################################################
@@ -138,8 +146,15 @@ def list_promotions():
 
     # Process the query string if any
     name = request.args.get("name")
+    category = request.args.get("category")
+    promotype = request.args.get("promotype")
+    available = request.args.get("available")
     if name:
         promotions = Promotion.find_by_name(name)
+    elif category:
+        promotions = Promotion.find_by_category(category)
+    elif available:
+        promotions = Promotion.find_by_availability(available)
     else:
         promotions = Promotion.all()
 
