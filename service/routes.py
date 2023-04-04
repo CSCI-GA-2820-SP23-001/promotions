@@ -31,13 +31,16 @@ def index():
 
 # Place your REST API code here ...
 
+
 @app.route("/health", methods=["GET"])
 def health_endpoint():
-    """ Make a GET request to the /health endpoint of the service """
+    """Make a GET request to the /health endpoint of the service"""
     return (
         jsonify({"status": "OK"}),
         status.HTTP_200_OK,
     )
+
+
 ######################################################################
 # ADD A NEW PROMOTION
 ######################################################################
@@ -56,8 +59,7 @@ def create_promotions():
     promotion.create()
     message = promotion.serialize()
 
-    location_url = url_for(
-        "get_promotion", promotion_id=promotion.id, _external=True)
+    location_url = url_for("get_promotion", promotion_id=promotion.id, _external=True)
 
     app.logger.info("Promotion with ID [%s] created.", promotion.id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
@@ -198,8 +200,7 @@ def activate_promotions(promotion_id):
 @app.route("/promotions/<int:promotion_id>/deactivate", methods=["PUT"])
 def deactivate_promotions(promotion_id):
     """Deactivate one Promotion by Promotion ID"""
-    app.logger.info(
-        "Request to deactivate promotion with id: %s", promotion_id)
+    app.logger.info("Request to deactivate promotion with id: %s", promotion_id)
 
     promotion = Promotion.find(promotion_id)
     if not promotion:
@@ -232,8 +233,7 @@ def check_content_type(content_type):
     if request.headers["Content-Type"] == content_type:
         return
 
-    app.logger.error("Invalid Content-Type: %s",
-                     request.headers["Content-Type"])
+    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
     abort(
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
         f"Content-Type must be {content_type}",
