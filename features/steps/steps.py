@@ -15,9 +15,9 @@
 ######################################################################
 
 """
-Pet Steps
+Promotion Steps
 
-Steps file for Pet.feature
+Steps file for Promotion.feature
 
 For information on Waiting until elements are present in the HTML see:
     https://selenium-python.readthedocs.io/waits.html
@@ -34,8 +34,8 @@ def step_impl(context):
     rest_endpoint = f"{context.BASE_URL}/promotions"
     context.resp = requests.get(rest_endpoint)
     expect(context.resp.status_code).to_equal(200)
-    for pet in context.resp.json():
-        context.resp = requests.delete(f"{rest_endpoint}/{pet['id']}")
+    for promotion in context.resp.json():
+        context.resp = requests.delete(f"{rest_endpoint}/{promotion['id']}")
         expect(context.resp.status_code).to_equal(204)
 
     # load the database with new promotions
