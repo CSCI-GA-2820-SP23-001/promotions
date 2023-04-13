@@ -4,16 +4,16 @@ on:
     branches:
       - master
     paths-ignore:
-    - 'README.md'
-    - '.vscode/**'
-    - '**.md'
+      - "README.md"
+      - ".vscode/**"
+      - "**.md"
   pull_request:
     branches:
       - master
     paths-ignore:
-    - 'README.md'
-    - '.vscode/**'
-    - '**.md'
+      - "README.md"
+      - ".vscode/**"
+      - "**.md"
 
 jobs:
   build:
@@ -45,8 +45,8 @@ jobs:
 
       - name: Install Python packages
         run: |
-          sudo python -m pip install --upgrade pip wheel
-          sudo pip install -r requirements.txt
+          python -m pip install --upgrade pip wheel
+          pip install -r requirements.txt
 
       - name: Run the service locally
         run: |
@@ -60,4 +60,3 @@ jobs:
 
       - name: Run Integration Tests
         run: behave
-  
