@@ -6,23 +6,23 @@ $(function () {
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#pet_id").val(res.id);
-        $("#pet_name").val(res.name);
-        $("#pet_category").val(res.category);
+        $("#promotion_id").val(res.id);
+        $("#promotion_name").val(res.name);
+        $("#promotion_category").val(res.category);
         if (res.available == true) {
-            $("#pet_available").val("true");
+            $("#promotion_available").val("true");
         } else {
-            $("#pet_available").val("false");
+            $("#promotion_available").val("false");
         }
-        $("#pet_gender").val(res.promotype);
+        $("#promotion_gender").val(res.promotype);
     }
 
     /// Clears all form fields
     function clear_form_data() {
-        $("#pet_name").val("");
-        $("#pet_category").val("");
-        $("#pet_available").val("");
-        $("#pet_gender").val("");
+        $("#promotion_name").val("");
+        $("#promotion_category").val("");
+        $("#promotion_available").val("");
+        $("#promotion_gender").val("");
     }
 
     // Updates the flash message area
@@ -32,15 +32,15 @@ $(function () {
     }
 
     // ****************************************
-    // Create a Pet
+    // Create a Promtion
     // ****************************************
 
     $("#create-btn").click(function () {
 
-        let name = $("#pet_name").val();
-        let category = $("#pet_category").val();
-        let available = $("#pet_available").val() == "true";
-        let promotype = $("#pet_gender").val();
+        let name = $("#promotion_name").val();
+        let category = $("#promotion_category").val();
+        let available = $("#promotion_available").val() == "true";
+        let promotype = $("#promotion_gender").val();
 
         let data = {
             "name": name,
@@ -70,16 +70,16 @@ $(function () {
 
 
     // ****************************************
-    // Update a Pet
+    // Update a Promtion
     // ****************************************
 
     $("#update-btn").click(function () {
 
-        let pet_id = $("#pet_id").val();
-        let name = $("#pet_name").val();
-        let category = $("#pet_category").val();
-        let available = $("#pet_available").val() == "true";
-        let promotype = $("#pet_gender").val();
+        let promotion_id = $("#promotion_id").val();
+        let name = $("#promotion_name").val();
+        let category = $("#promotion_category").val();
+        let available = $("#promotion_available").val() == "true";
+        let promotype = $("#promotion_gender").val();
 
         let data = {
             "name": name,
@@ -92,7 +92,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/promotions/${pet_id}`,
+            url: `/promotions/${promotion_id}`,
             contentType: "application/json",
             data: JSON.stringify(data)
         })
@@ -109,18 +109,18 @@ $(function () {
     });
 
     // ****************************************
-    // Retrieve a Pet
+    // Retrieve a Promtion
     // ****************************************
 
     $("#retrieve-btn").click(function () {
 
-        let pet_id = $("#pet_id").val();
+        let promotion_id = $("#promotion_id").val();
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions/${pet_id}`,
+            url: `/promotions/${promotion_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -139,18 +139,18 @@ $(function () {
     });
 
     // ****************************************
-    // Delete a Pet
+    // Delete a Promtion
     // ****************************************
 
     $("#delete-btn").click(function () {
 
-        let pet_id = $("#pet_id").val();
+        let promotion_id = $("#promotion_id").val();
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/promotions/${pet_id}`,
+            url: `/promotions/${promotion_id}`,
             contentType: "application/json",
             data: '',
         })
@@ -170,20 +170,20 @@ $(function () {
     // ****************************************
 
     $("#clear-btn").click(function () {
-        $("#pet_id").val("");
+        $("#promotion_id").val("");
         $("#flash_message").empty();
         clear_form_data()
     });
 
     // ****************************************
-    // Search for a Pet
+    // Search for a Promtion
     // ****************************************
 
     $("#search-btn").click(function () {
 
-        let name = $("#pet_name").val();
-        let category = $("#pet_category").val();
-        let available = $("#pet_available").val() == "true";
+        let name = $("#promotion_name").val();
+        let category = $("#promotion_category").val();
+        let available = $("#promotion_available").val() == "true";
 
         let queryString = ""
 
@@ -225,20 +225,20 @@ $(function () {
             table += '<th class="col-md-2">Available</th>'
             table += '<th class="col-md-2">Promotion Type</th>'
             table += '</tr></thead><tbody>'
-            let firstPet = "";
+            let firstPromtion = "";
             for (let i = 0; i < res.length; i++) {
-                let pet = res[i];
-                table += `<tr id="row_${i}"><td>${pet.id}</td><td>${pet.name}</td><td>${pet.category}</td><td>${pet.available}</td><td>${pet.promotype}</td></tr>`;
+                let promotion = res[i];
+                table += `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.category}</td><td>${promotion.available}</td><td>${promotion.promotype}</td></tr>`;
                 if (i == 0) {
-                    firstPet = pet;
+                    firstPromtion = promotion;
                 }
             }
             table += '</tbody></table>';
             $("#search_results").append(table);
 
             // copy the first result to the form
-            if (firstPet != "") {
-                update_form_data(firstPet)
+            if (firstPromtion != "") {
+                update_form_data(firstPromtion)
             }
 
             flash_message("Success")
