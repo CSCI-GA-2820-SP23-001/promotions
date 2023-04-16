@@ -17,11 +17,8 @@ from . import app
 ######################################################################
 @app.route("/")
 def index():
-    """Root URL response"""
-    return (
-        jsonify({"status": "OK"}),
-        status.HTTP_200_OK,
-    )
+    """Base URL for our service"""
+    return app.send_static_file("index.html")
 
 
 ######################################################################
