@@ -14,7 +14,7 @@ $(function () {
         } else {
             $("#promotion_available").val("false");
         }
-        $("#promotion_gender").val(res.promotype);
+        $("#promotion_promotype").val(res.promotype);
     }
 
     /// Clears all form fields
@@ -22,7 +22,7 @@ $(function () {
         $("#promotion_name").val("");
         $("#promotion_category").val("");
         $("#promotion_available").val("");
-        $("#promotion_gender").val("");
+        $("#promotion_promotype").val("");
     }
 
     // Updates the flash message area
@@ -40,7 +40,7 @@ $(function () {
         let name = $("#promotion_name").val();
         let category = $("#promotion_category").val();
         let available = $("#promotion_available").val() == "true";
-        let promotype = $("#promotion_gender").val();
+        let promotype = $("#promotion_promotype").val();
 
         let data = {
             "name": name,
@@ -79,7 +79,7 @@ $(function () {
         let name = $("#promotion_name").val();
         let category = $("#promotion_category").val();
         let available = $("#promotion_available").val() == "true";
-        let promotype = $("#promotion_gender").val();
+        let promotype = $("#promotion_promotype").val();
 
         let data = {
             "name": name,
