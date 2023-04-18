@@ -22,3 +22,16 @@ Scenario: List all promotions
     And I should see "BFFs" in the results
     And I should see "summer2023" in the results
     And I should not see "christimas" in the results
+
+Scenario: Delete a Promotion
+    When I visit the "Home Page"
+    And I set the "Name" to "christimas"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "christimas" in the "Name" field
+    And I should see "holiday" in the "Catetory" field
+    When I press the "Delete" button
+    Then I should see the message "Promotion has been deleted!"
+    When I set "Name" to "christimas"
+    And press the "Search" button
+    Then I should not see "christimas" in the results
