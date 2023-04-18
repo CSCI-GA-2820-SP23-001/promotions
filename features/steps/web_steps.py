@@ -163,26 +163,3 @@ def step_impl(context, element_name, text_string):
     )
     element.clear()
     element.send_keys(text_string)
-
-###################################################################
-# This code works because of the following naming convention:
-# The buttons have an id in the html hat is the button text
-# in lowercase followed by '-btn' so the Delete button has an id of
-# id='delete-btn'. That allows us to lowercase the name and add '-btn'
-# to get the element id of any button
-##################################################################
-
-@when('I press the "{button}" button')
-def step_impl(context, button):
-    button_id = button.lower() + '-btn'
-    context.driver.find_element_by_id(button_id).click()
-
-@then('I should see the message "{message}"')
-def step_impl(context, message):
-    found = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
-        expected_conditions.text_to_be_present_in_element(
-            (By.ID, 'flash_message'),
-            message
-        )
-    )
-    expect(found).to_be(True)

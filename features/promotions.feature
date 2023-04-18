@@ -6,7 +6,7 @@ Feature: The promotion service back-end
 Background:
     Given the following promotions
         | name       | category           | available | promotype            |
-        | christimas | holiday            | False     | BUYONEGETONEFREE     | 
+        | christmas | holiday            | False     | BUYONEGETONEFREE     | 
         | BFFs       | friends_and_family | True      | GET20PERCENTOFF      |
         | summer2023 | seasonal           | True      | UNKNOWN              |
 
@@ -21,17 +21,17 @@ Scenario: List all promotions
     Then I should see the message "Success"
     And I should see "BFFs" in the results
     And I should see "summer2023" in the results
-    And I should not see "christimas" in the results
+    And I should not see "christmas" in the results
 
 Scenario: Delete a Promotion
     When I visit the "Home Page"
-    And I set the "Name" to "christimas"
+    And I set the "Name" to "christmas"
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should see "christimas" in the "Name" field
-    And I should see "holiday" in the "Catetory" field
+    And I should see "christmas" in the "Name" field
+    And I should see "holiday" in the "Category" field
     When I press the "Delete" button
-    Then I should see the message "Promotion has been deleted!"
-    When I set "Name" to "christimas"
-    And press the "Search" button
-    Then I should not see "christimas" in the results
+    Then I should see the message "Promotion has been Deleted!"
+    When I set the "Name" to "christmas"
+    And I press the "Search" button
+    Then I should not see "christmas" in the results
