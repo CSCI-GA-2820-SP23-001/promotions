@@ -55,4 +55,5 @@ Scenario: Delete a Promotion
     Then I should see the message "Promotion has been Deleted!"
     When I set the "Name" to "christmas"
     And I press the "Search" button
+    Then I should see the message "Success"
     Then I should not see "christmas" in the results
