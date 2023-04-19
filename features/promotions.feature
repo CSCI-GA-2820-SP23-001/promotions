@@ -3,7 +3,6 @@ Feature: The promotion service back-end
     I need a RESTful catalog service
     So that I can keep track of all the promotions
 
-
 Background:
     Given the following promotions
         | name       | category           | available | promotype            |
@@ -11,10 +10,10 @@ Background:
         | BFFs       | friends_and_family | True      | GET20PERCENTOFF      |
         | summer2023 | seasonal           | True      | UNKNOWN              |
 
-    Scenario: The server is running
-        When I visit the "Home Page"
-        Then I should see "Promotions!" in the title
-        And I should not see "404 Not Found"
+Scenario: The server is running
+    When I visit the "Home Page"
+    Then I should see "Promotions!" in the title
+    And I should not see "404 Not Found"
 
 Scenario: Create a Promotion
     When I visit the "Home Page"
