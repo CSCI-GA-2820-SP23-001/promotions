@@ -176,7 +176,7 @@ $(function () {
     });
 
     // ****************************************
-    // Search for a Promtion
+    // Search for a Promotion
     // ****************************************
 
     $("#search-btn").click(function () {
