@@ -54,7 +54,7 @@ jobs:
           gunicorn --log-level=critical --bind=0.0.0.0:8080 service:app &
           sleep 5
           curl -i http://localhost:8080/health
-          echo "\n*** SERVER IS RUNNING ***\"
+          echo "\n*** SERVER IS RUNNING ***"
         env:
           DATABASE_URI: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
 
