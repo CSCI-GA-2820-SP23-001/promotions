@@ -6,7 +6,7 @@ Feature: The promotion service back-end
 Background:
     Given the following promotions
         | name       | category           | available | promotype            |
-        | christmas | holiday            | False     | BUYONEGETONEFREE     | 
+        | christmas  | holiday            | False     | BUYONEGETONEFREE     | 
         | BFFs       | friends_and_family | True      | GET20PERCENTOFF      |
         | summer2023 | seasonal           | True      | UNKNOWN              |
 
@@ -38,6 +38,24 @@ Scenario: Create a Promotion
 
 Scenario: List all promotions
     When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "BFFs" in the results
+    And I should see "summer2023" in the results
+    And I should not see "christmas" in the results
+
+Scenario: Search for seasonal
+    When I visit the "Home Page"
+    And I set the "Category" to "seasonal"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "summer2023" in the results
+    And I should not see "christmas" in the results
+    And I should not see "BFFs" in the results
+
+Scenario: Search for available
+    When I visit the "Home Page"
+    And I select "True" in the "Available" dropdown
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "BFFs" in the results
