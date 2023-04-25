@@ -31,7 +31,7 @@ class PromotionFactory(factory.Factory):
 
     id = factory.Sequence(lambda n: n)
     name = factory.Faker("first_name")
-    category = FuzzyChoice(choices=["a", "b", "c", "d"])
+    category = FuzzyChoice(choices=["holiday", "friends_and_family", "seasonal"])
     available = FuzzyChoice(choices=[True, False])
     promotype = FuzzyChoice(
         choices=[Promotype.BUYONEGETONEFREE, Promotype.GET20PERCENTOFF, Promotype.UNKNOWN])
