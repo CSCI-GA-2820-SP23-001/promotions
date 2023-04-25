@@ -57,3 +57,25 @@ Scenario: Delete a Promotion
     And I press the "Search" button
     Then I should see the message "Success"
     Then I should not see "christmas" in the results
+
+Scenario: Update a Promotion
+    When I visit the "Home Page"
+    And I set the "Name" to "BFFs"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "BFFs" in the "Name" field
+    And I should see "friends_and_family" in the "Category" field
+    When I change "Name" to "Friend"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Friend" in the "Name" field
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Friend" in the results
+    And I should not see "BFFs" in the results
