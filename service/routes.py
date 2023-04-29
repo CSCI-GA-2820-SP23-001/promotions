@@ -5,12 +5,9 @@ Describe what your service does here
 """
 
 # pylint: disable=wrong-import-position
-import sys  # noqa: F401, E402
-import secrets  # noqa: F401, E402
-import logging  # noqa: F401, E402
 from functools import wraps
-from flask import jsonify, request, url_for, render_template, make_response, abort  # noqa: F401, E402
-from flask_restx import Api, Resource, fields, reqparse, inputs  # noqa: F401, E402
+from flask import jsonify, request, abort  # noqa: F401, E402
+from flask_restx import Resource, fields, reqparse, inputs  # noqa: F401, E402
 from service.common import status  # HTTP Status Codes
 from service.models import Promotion, Promotype
 from . import app, api
@@ -35,7 +32,8 @@ create_model = api.model('Promotion', {
                               description='The category of Promotion (e.g., holiday, friends_and_family, seasonal, etc.)'),
     'available': fields.Boolean(required=True,
                                 description='Is the Promotion available for purchase?'),
-    'promotype': fields.String(enum=Promotype._member_names_, description='The types of the Promotion')
+    'promotype': fields.String(enum=Promotype._member_names_,  # pylint: disable=W0212
+                               description='The types of the Promotion')  # pylint: disable=W0212
 })
 
 promotion_model = api.inherit(
@@ -58,17 +56,17 @@ promotion_args.add_argument('available',
 ######################################################################
 # Authorization Decorator
 ######################################################################
-def token_required(f):
-    @wraps(f)
+def token_required(func):
+    """ function for requiring the match of token """
+    @wraps(func)
     def decorated(*args, **kwargs):
         token = None
         if 'X-Api-Key' in request.headers:
             token = request.headers['X-Api-Key']
 
         if app.config.get('API_KEY') and app.config['API_KEY'] == token:
-            return f(*args, **kwargs)
-        else:
-            return {'message': 'Invalid or missing token'}, 401
+            return func(*args, **kwargs)
+        return {'message': 'Invalid or missing token'}, 401
     return decorated
 
 

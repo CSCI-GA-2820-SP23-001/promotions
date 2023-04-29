@@ -23,6 +23,7 @@ CONTENT_TYPE_JSON = "application/json"
 ######################################################################
 
 
+# pylint: disable=R0904
 class TestPromotionService(TestCase):
     """ REST API Server Tests """
 
