@@ -56,6 +56,7 @@ $(function () {
             url: "/api/promotions",
             contentType: "application/json",
             data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         });
 
         ajax.done(function (res) {
@@ -94,7 +95,8 @@ $(function () {
             type: "PUT",
             url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
-            data: JSON.stringify(data)
+            data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -109,7 +111,7 @@ $(function () {
     });
 
     // ****************************************
-    // Retrieve a Promtion
+    // Retrieve a Promotion
     // ****************************************
 
     $("#retrieve-btn").click(function () {
@@ -122,7 +124,8 @@ $(function () {
             type: "GET",
             url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
-            data: ''
+            data: '',
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -139,7 +142,7 @@ $(function () {
     });
 
     // ****************************************
-    // Delete a Promtion
+    // Delete a Promotion
     // ****************************************
 
     $("#delete-btn").click(function () {
@@ -153,6 +156,7 @@ $(function () {
             url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
             data: '',
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -211,7 +215,8 @@ $(function () {
             type: "GET",
             url: `/api/promotions?${queryString}`,
             contentType: "application/json",
-            data: ''
+            data: '',
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -225,20 +230,20 @@ $(function () {
             table += '<th class="col-md-2">Available</th>'
             table += '<th class="col-md-2">Promotion Type</th>'
             table += '</tr></thead><tbody>'
-            let firstPromtion = "";
+            let firstPromotion = "";
             for (let i = 0; i < res.length; i++) {
                 let promotion = res[i];
                 table += `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.category}</td><td>${promotion.available}</td><td>${promotion.promotype}</td></tr>`;
                 if (i == 0) {
-                    firstPromtion = promotion;
+                    firstPromotion = promotion;
                 }
             }
             table += '</tbody></table>';
             $("#search_results").append(table);
 
             // copy the first result to the form
-            if (firstPromtion != "") {
-                update_form_data(firstPromtion)
+            if (firstPromotion != "") {
+                update_form_data(firstPromotion)
             }
 
             flash_message("Success")

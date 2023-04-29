@@ -74,7 +74,7 @@ def token_required(f):
 ######################################################################
 def generate_apikey():
     """ Helper function used when testing API keys """
-    return secrets.token_hex(16)
+    return "133b94898f9b6c07ede6296e0ec197f7"
 
 ######################################################################
 #  PATH: /promotions/{id}
@@ -92,7 +92,7 @@ class PromotionResource(Resource):
     """
 
     #------------------------------------------------------------------
-    # RETRIEVE A PET
+    # RETRIEVE A PROMOTION
     #------------------------------------------------------------------
     @api.doc('get_promotions')
     @api.response(404, 'Promotion not found')
@@ -114,7 +114,7 @@ class PromotionResource(Resource):
         return promotion.serialize(), status.HTTP_200_OK
 
     #------------------------------------------------------------------
-    # UPDATE AN EXISTING PET
+    # UPDATE AN EXISTING PROMOTION
     #------------------------------------------------------------------
     @api.doc('update_promotions', security='apikey')
     @api.response(404, 'Promotion not found')
@@ -147,7 +147,7 @@ class PromotionResource(Resource):
         return promotion.serialize(), status.HTTP_200_OK
 
     #------------------------------------------------------------------
-    # DELETE A PET
+    # DELETE A PROMOTION
     #------------------------------------------------------------------
     @api.doc('delete_promotions', security='apikey')
     @api.response(204, 'Promotion deleted')
@@ -288,9 +288,6 @@ class DeactivateResource(Resource):
 ######################################################################
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
-
-
-# Place your REST API code here ...
 
 
 @app.route("/health", methods=["GET"])
@@ -483,20 +480,20 @@ def health_endpoint():
 ######################################################################
 
 
-def check_content_type(content_type):
-    """Checks that the media type is correct"""
-    if "Content-Type" not in request.headers:
-        app.logger.error("No Content-Type specified.")
-        abort(
-            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            f"Content-Type must be {content_type}",
-        )
+# def check_content_type(content_type):
+#     """Checks that the media type is correct"""
+#     if "Content-Type" not in request.headers:
+#         app.logger.error("No Content-Type specified.")
+#         abort(
+#             status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+#             f"Content-Type must be {content_type}",
+#         )
 
-    if request.headers["Content-Type"] == content_type:
-        return
+#     if request.headers["Content-Type"] == content_type:
+#         return
 
-    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
-    abort(
-        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        f"Content-Type must be {content_type}",
-    )
+#     app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
+#     abort(
+#         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+#         f"Content-Type must be {content_type}",
+#     )

@@ -8,7 +8,7 @@ Test cases can be run with the following:
 import os
 import logging
 from unittest import TestCase
-from service import app
+from service import app, routes
 from service.models import db, init_db, Promotion
 from service.common import status  # HTTP Status Codes
 from tests.factories import PromotionFactory
@@ -33,6 +33,8 @@ class TestPromotionService(TestCase):
         app.config["DEBUG"] = False
         # Set up the test database
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        api_key = routes.generate_apikey()
+        app.config['API_KEY'] = api_key
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
 
@@ -160,6 +162,15 @@ class TestPromotionService(TestCase):
         data = response.get_json()
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
+
+    def test_call_create_with_an_id(self):
+        """Call create passing an id"""
+        resp = self.client.post(
+            f"{BASE_URL}/foo", 
+            json={},
+            headers=self.headers
+        )
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_delete_promotion(self):
         '''This should delete a promotion'''
