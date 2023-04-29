@@ -61,7 +61,7 @@ class TestPromotionService(TestCase):
         for _ in range(count):
             test_promotion = PromotionFactory()
             response = self.client.post(
-                BASE_URL, json=test_promotion.serialize(),content_type=CONTENT_TYPE_JSON,
+                BASE_URL, json=test_promotion.serialize(), content_type=CONTENT_TYPE_JSON,
                 headers=self.headers)
             self.assertEqual(
                 response.status_code, status.HTTP_201_CREATED, "Could not create test promotion"
@@ -166,7 +166,7 @@ class TestPromotionService(TestCase):
     def test_call_create_with_an_id(self):
         """Call create passing an id"""
         resp = self.client.post(
-            f"{BASE_URL}/foo", 
+            f"{BASE_URL}/foo",
             json={},
             headers=self.headers
         )
@@ -220,7 +220,7 @@ class TestPromotionService(TestCase):
     def test_create_promotion_without_json(self):
         """Create a Promotion with no Content-Type"""
         resp = self.client.post(
-            BASE_URL, 
+            BASE_URL,
             data="bad data",
             headers=self.headers
         )

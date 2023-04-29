@@ -4,18 +4,18 @@ My Service
 Describe what your service does here
 """
 
-import sys
-import secrets
-import logging
+# pylint: disable=wrong-import-position
+import sys  # noqa: F401, E402
+import secrets  # noqa: F401, E402
+import logging  # noqa: F401, E402
 from functools import wraps
-from flask import jsonify, request, url_for, render_template, make_response, abort
-from flask_restx import Api, Resource, fields, reqparse, inputs
+from flask import jsonify, request, url_for, render_template, make_response, abort  # noqa: F401, E402
+from flask_restx import Api, Resource, fields, reqparse, inputs  # noqa: F401, E402
 from service.common import status  # HTTP Status Codes
 from service.models import Promotion, Promotype
 from . import app, api
 
 # Import Flask application
-from . import app
 
 
 ######################################################################
@@ -25,6 +25,7 @@ from . import app
 def index():
     """Base URL for our service"""
     return app.send_static_file("index.html")
+
 
 # Define the model so that the docs reflect what can be sent
 create_model = api.model('Promotion', {
@@ -38,7 +39,7 @@ create_model = api.model('Promotion', {
 })
 
 promotion_model = api.inherit(
-    'PromotionModel', 
+    'PromotionModel',
     create_model,
     {
         'id': fields.String(readOnly=True,
@@ -50,7 +51,9 @@ promotion_model = api.inherit(
 promotion_args = reqparse.RequestParser()
 promotion_args.add_argument('name', type=str, location='args', required=False, help='List Promotions by name')
 promotion_args.add_argument('category', type=str, location='args', required=False, help='List Promotions by category')
-promotion_args.add_argument('available', type=inputs.boolean, location='args', required=False, help='List Promotions by availability')
+promotion_args.add_argument('available',
+                            type=inputs.boolean, location='args', required=False, help='List Promotions by availability')
+
 
 ######################################################################
 # Authorization Decorator
@@ -76,6 +79,7 @@ def generate_apikey():
     """ Helper function used when testing API keys """
     return "133b94898f9b6c07ede6296e0ec197f7"
 
+
 ######################################################################
 #  PATH: /promotions/{id}
 ######################################################################
@@ -91,9 +95,9 @@ class PromotionResource(Resource):
     DELETE /promotion{id} -  Deletes a Promotion with the id
     """
 
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     # RETRIEVE A PROMOTION
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     @api.doc('get_promotions')
     @api.response(404, 'Promotion not found')
     @api.marshal_with(promotion_model)
@@ -113,9 +117,9 @@ class PromotionResource(Resource):
         app.logger.info("Returning promotion: %s", promotion.name)
         return promotion.serialize(), status.HTTP_200_OK
 
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     # UPDATE AN EXISTING PROMOTION
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     @api.doc('update_promotions', security='apikey')
     @api.response(404, 'Promotion not found')
     @api.response(400, 'The posted Promotion data was not valid')
@@ -146,9 +150,9 @@ class PromotionResource(Resource):
         app.logger.info("Promotion with ID [%s] updated.", promotion.id)
         return promotion.serialize(), status.HTTP_200_OK
 
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     # DELETE A PROMOTION
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     @api.doc('delete_promotions', security='apikey')
     @api.response(204, 'Promotion deleted')
     @token_required
@@ -165,15 +169,16 @@ class PromotionResource(Resource):
         app.logger.info("Promotion with id '%s' deleted.", promotion_id)
         return "", status.HTTP_204_NO_CONTENT
 
+
 ######################################################################
 #  PATH: /promotions
 ######################################################################
 @api.route('/promotions', strict_slashes=False)
 class PromotionCollection(Resource):
     """ Handles all interactions with collections of Promotions """
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     # LIST ALL PROMOTIONS
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     @api.doc('list_promotions')
     @api.expect(promotion_args, validate=True)
     @api.marshal_list_with(promotion_model)
@@ -203,11 +208,9 @@ class PromotionCollection(Resource):
 
         return results, status.HTTP_200_OK
 
-
-
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     # ADD A NEW PROMOTION
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     @api.doc('create_promotions', security='apikey')
     @api.response(400, 'The posted data was not valid')
     @api.expect(create_model)
@@ -229,6 +232,7 @@ class PromotionCollection(Resource):
         app.logger.info("Promotion with ID [%s] created.", promotion.id)
         return promotion.serialize(), status.HTTP_201_CREATED, {'Location': location_url}
 
+
 ######################################################################
 #  PATH: /promotions/{id}/activate
 ######################################################################
@@ -249,14 +253,15 @@ class ActivateResource(Resource):
         promotion = Promotion.find(promotion_id)
         if not promotion:
             abort(
-            status.HTTP_404_NOT_FOUND,
-            f"Promotion with id '{promotion_id}' was not found.",
-            )
+                 status.HTTP_404_NOT_FOUND,
+                 f"Promotion with id '{promotion_id}' was not found.",
+                 )
         promotion.available = True
         promotion.update()
         app.logger.info("Promotion with ID [%s] activated.", promotion.id)
         return promotion.serialize(), status.HTTP_200_OK
-    
+
+
 ######################################################################
 #  PATH: /promotions/{id}/deactivate
 ######################################################################
@@ -277,9 +282,9 @@ class DeactivateResource(Resource):
         promotion = Promotion.find(promotion_id)
         if not promotion:
             abort(
-            status.HTTP_404_NOT_FOUND,
-            f"Promotion with id '{promotion_id}' was not found.",
-            )
+                 status.HTTP_404_NOT_FOUND,
+                 f"Promotion with id '{promotion_id}' was not found.",
+                 )
         promotion.available = False
         promotion.update()
         app.logger.info("Promotion with ID [%s] deactivated.", promotion.id)
@@ -297,7 +302,6 @@ def health_endpoint():
         jsonify({"status": "OK"}),
         status.HTTP_200_OK,
     )
-
 
 
 # ######################################################################
