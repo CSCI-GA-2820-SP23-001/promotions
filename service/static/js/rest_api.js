@@ -32,7 +32,7 @@ $(function () {
     }
 
     // ****************************************
-    // Create a Promtion
+    // Create a Promotion
     // ****************************************
 
     $("#create-btn").click(function () {
@@ -53,7 +53,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "POST",
-            url: "/promotions",
+            url: "/api/promotions",
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -70,7 +70,7 @@ $(function () {
 
 
     // ****************************************
-    // Update a Promtion
+    // Update a Promotion
     // ****************************************
 
     $("#update-btn").click(function () {
@@ -92,7 +92,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
             data: JSON.stringify(data)
         })
@@ -120,7 +120,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -150,7 +150,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
             data: '',
         })
@@ -209,7 +209,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions?${queryString}`,
+            url: `/api/promotions?${queryString}`,
             contentType: "application/json",
             data: ''
         })
