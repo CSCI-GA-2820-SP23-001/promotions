@@ -170,6 +170,87 @@ $(function () {
     });
 
     // ****************************************
+    // Activate a Promotion
+    // ****************************************
+
+    $("#activate-btn").click(function () {
+
+        let promotion_id = $("#promotion_id").val();
+        let name = $("#promotion_name").val();
+        let category = $("#promotion_category").val();
+        let available = $("#promotion_available").val() == "false";
+        let promotype = $("#promotion_promotype").val();
+
+        let data = {
+            "name": name,
+            "category": category,
+            "available": available,
+            "promotype": promotype,
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/api/promotions/${promotion_id}/activate`,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
+        })
+
+        ajax.done(function (res) {
+            update_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+
+    });
+
+    // ****************************************
+    // Activate a Promotion
+    // ****************************************
+
+    $("#deactivate-btn").click(function () {
+
+        let promotion_id = $("#promotion_id").val();
+        let name = $("#promotion_name").val();
+        let category = $("#promotion_category").val();
+        let available = $("#promotion_available").val() == "true";
+        let promotype = $("#promotion_promotype").val();
+
+        let data = {
+            "name": name,
+            "category": category,
+            "available": available,
+            "promotype": promotype,
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/api/promotions/${promotion_id}/deactivate`,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
+        })
+
+        ajax.done(function (res) {
+            update_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+
+    });
+
+
+    // ****************************************
     // Clear the form
     // ****************************************
 
