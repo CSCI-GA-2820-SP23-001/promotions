@@ -66,6 +66,9 @@ Scenario: Update a Promotion
     And I should see "BFFs" in the "Name" field
     And I should see "friends_and_family" in the "Category" field
     When I change "Name" to "Friend"
+    And I change "Category" to "friends_promotion"
+    And I select "False" in the "Available" dropdown
+    And I select "Buy one, get one free" in the "Promotype" dropdown
     And I press the "Update" button
     Then I should see the message "Success"
     When I copy the "Id" field
@@ -74,6 +77,9 @@ Scenario: Update a Promotion
     And I press the "Retrieve" button
     Then I should see the message "Success"
     And I should see "Friend" in the "Name" field
+    And I should see "friends_promotion" in the "Category" field
+    And I should see "False" in the "Available" dropdown
+    And I should see "Buy one, get one free" in the "Promotype" dropdown
     When I press the "Clear" button
     And I press the "Search" button
     Then I should see the message "Success"
