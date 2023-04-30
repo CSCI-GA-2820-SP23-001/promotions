@@ -8,7 +8,7 @@ Test cases can be run with the following:
 import os
 import logging
 from unittest import TestCase
-from service import app
+from service import app, routes
 from service.models import db, init_db, Promotion
 from service.common import status  # HTTP Status Codes
 from tests.factories import PromotionFactory
@@ -16,12 +16,14 @@ from tests.factories import PromotionFactory
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
-BASE_URL = "/promotions"
+BASE_URL = "/api/promotions"
+CONTENT_TYPE_JSON = "application/json"
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
 
 
+# pylint: disable=R0904
 class TestPromotionService(TestCase):
     """ REST API Server Tests """
 
@@ -32,6 +34,8 @@ class TestPromotionService(TestCase):
         app.config["DEBUG"] = False
         # Set up the test database
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        api_key = routes.generate_apikey()
+        app.config['API_KEY'] = api_key
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
 
@@ -43,6 +47,9 @@ class TestPromotionService(TestCase):
     def setUp(self):
         """Runs before each test"""
         self.client = app.test_client()
+        self.headers = {
+            'X-Api-Key': app.config['API_KEY']
+        }
         db.session.query(Promotion).delete()  # clean up the last tests
         db.session.commit()
 
@@ -55,7 +62,8 @@ class TestPromotionService(TestCase):
         for _ in range(count):
             test_promotion = PromotionFactory()
             response = self.client.post(
-                BASE_URL, json=test_promotion.serialize())
+                BASE_URL, json=test_promotion.serialize(), content_type=CONTENT_TYPE_JSON,
+                headers=self.headers)
             self.assertEqual(
                 response.status_code, status.HTTP_201_CREATED, "Could not create test promotion"
             )
@@ -156,10 +164,19 @@ class TestPromotionService(TestCase):
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
 
+    def test_call_create_with_an_id(self):
+        """Call create passing an id"""
+        resp = self.client.post(
+            f"{BASE_URL}/foo",
+            json={},
+            headers=self.headers
+        )
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
     def test_delete_promotion(self):
         '''This should delete a promotion'''
         test_promotion = self._create_promotions(1)[0]
-        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}", headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(response.data), 0)
         # Check to see if the promotion was deleted
@@ -168,14 +185,14 @@ class TestPromotionService(TestCase):
 
     def test_delete_promotion_not_found(self):
         '''This should test delete promotion not found'''
-        response = self.client.delete(f"{BASE_URL}/1")
+        response = self.client.delete(f"{BASE_URL}/1", headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_create_promotion(self):
         """It should Create a new promotion"""
         test_promotion = PromotionFactory()
         logging.debug("Test Promotion: %s", test_promotion.serialize())
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        response = self.client.post(BASE_URL, json=test_promotion.serialize(), headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Make sure location header is set
@@ -202,18 +219,19 @@ class TestPromotionService(TestCase):
                          test_promotion.promotype.name)
 
     def test_create_promotion_without_json(self):
-        """It should not Create a new promotion, instead, give 415 error"""
-        test_promotion = PromotionFactory()
-        logging.debug("Test Promotion: %s", test_promotion.serialize())
-        response = self.client.post(BASE_URL)
-        self.assertEqual(response.status_code,
-                         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        """Create a Promotion with no Content-Type"""
+        resp = self.client.post(
+            BASE_URL,
+            data="bad data",
+            headers=self.headers
+        )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_promotion_with_bad_json(self):
-        """It should not Create a new promotion, instead, give 400 error"""
+    def test_create_promotion_with_wrong_content_type(self):
+        """Create a Pet with wrong Content-Type, give 400 error"""
         test_promotion = PromotionFactory()
         logging.debug("Test Promotion: %s", test_promotion.serialize())
-        response = self.client.post(BASE_URL, json="")
+        response = self.client.post(BASE_URL, json="", headers=self.headers)
         self.assertEqual(response.status_code,
                          status.HTTP_400_BAD_REQUEST)
 
@@ -221,7 +239,7 @@ class TestPromotionService(TestCase):
         """It should Update an existing Promotion"""
         # create a promotion to update
         test_promotion = PromotionFactory()
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        response = self.client.post(BASE_URL, json=test_promotion.serialize(), headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # update the promotion
@@ -229,7 +247,7 @@ class TestPromotionService(TestCase):
         logging.debug(new_promotion)
         new_promotion["category"] = "unknown"
         response = self.client.put(
-            f"{BASE_URL}/{new_promotion['id']}", json=new_promotion)
+            f"{BASE_URL}/{new_promotion['id']}", json=new_promotion, headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_promotion = response.get_json()
         self.assertEqual(updated_promotion["category"], "unknown")
@@ -237,12 +255,12 @@ class TestPromotionService(TestCase):
     def test_update_promotion_not_found(self):
         '''This should test update promotion not found'''
         test_promotion = PromotionFactory()
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        response = self.client.post(BASE_URL, json=test_promotion.serialize(), headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         # update the promotion
         new_promotion = response.get_json()
         logging.debug(new_promotion)
-        response = self.client.put(f"{BASE_URL}/0", json=new_promotion)
+        response = self.client.put(f"{BASE_URL}/0", json=new_promotion, headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_activate_promotions(self):
@@ -251,7 +269,7 @@ class TestPromotionService(TestCase):
         test_promotion.available = False
         logging.debug(test_promotion)
 
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        response = self.client.post(BASE_URL, json=test_promotion.serialize(), headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         new_promotion = response.get_json()
@@ -275,7 +293,7 @@ class TestPromotionService(TestCase):
         test_promotion.available = True
         logging.debug(test_promotion)
 
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        response = self.client.post(BASE_URL, json=test_promotion.serialize(), headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         new_promotion = response.get_json()
