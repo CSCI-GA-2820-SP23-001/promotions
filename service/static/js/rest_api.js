@@ -32,7 +32,7 @@ $(function () {
     }
 
     // ****************************************
-    // Create a Promtion
+    // Create a Promotion
     // ****************************************
 
     $("#create-btn").click(function () {
@@ -53,9 +53,10 @@ $(function () {
 
         let ajax = $.ajax({
             type: "POST",
-            url: "/promotions",
+            url: "/api/promotions",
             contentType: "application/json",
             data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         });
 
         ajax.done(function (res) {
@@ -70,7 +71,7 @@ $(function () {
 
 
     // ****************************************
-    // Update a Promtion
+    // Update a Promotion
     // ****************************************
 
     $("#update-btn").click(function () {
@@ -92,9 +93,10 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
-            data: JSON.stringify(data)
+            data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -109,7 +111,7 @@ $(function () {
     });
 
     // ****************************************
-    // Retrieve a Promtion
+    // Retrieve a Promotion
     // ****************************************
 
     $("#retrieve-btn").click(function () {
@@ -120,9 +122,10 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
-            data: ''
+            data: '',
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -139,7 +142,7 @@ $(function () {
     });
 
     // ****************************************
-    // Delete a Promtion
+    // Delete a Promotion
     // ****************************************
 
     $("#delete-btn").click(function () {
@@ -150,9 +153,10 @@ $(function () {
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
             data: '',
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -164,6 +168,87 @@ $(function () {
             flash_message("Server error!")
         });
     });
+
+    // ****************************************
+    // Activate a Promotion
+    // ****************************************
+
+    $("#activate-btn").click(function () {
+
+        let promotion_id = $("#promotion_id").val();
+        let name = $("#promotion_name").val();
+        let category = $("#promotion_category").val();
+        let available = $("#promotion_available").val() == "false";
+        let promotype = $("#promotion_promotype").val();
+
+        let data = {
+            "name": name,
+            "category": category,
+            "available": available,
+            "promotype": promotype,
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/api/promotions/${promotion_id}/activate`,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
+        })
+
+        ajax.done(function (res) {
+            update_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+
+    });
+
+    // ****************************************
+    // Activate a Promotion
+    // ****************************************
+
+    $("#deactivate-btn").click(function () {
+
+        let promotion_id = $("#promotion_id").val();
+        let name = $("#promotion_name").val();
+        let category = $("#promotion_category").val();
+        let available = $("#promotion_available").val() == "true";
+        let promotype = $("#promotion_promotype").val();
+
+        let data = {
+            "name": name,
+            "category": category,
+            "available": available,
+            "promotype": promotype,
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/api/promotions/${promotion_id}/deactivate`,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
+        })
+
+        ajax.done(function (res) {
+            update_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+
+    });
+
 
     // ****************************************
     // Clear the form
@@ -209,9 +294,10 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions?${queryString}`,
+            url: `/api/promotions?${queryString}`,
             contentType: "application/json",
-            data: ''
+            data: '',
+            headers: { 'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7" }
         })
 
         ajax.done(function (res) {
@@ -225,20 +311,20 @@ $(function () {
             table += '<th class="col-md-2">Available</th>'
             table += '<th class="col-md-2">Promotion Type</th>'
             table += '</tr></thead><tbody>'
-            let firstPromtion = "";
+            let firstPromotion = "";
             for (let i = 0; i < res.length; i++) {
                 let promotion = res[i];
                 table += `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.category}</td><td>${promotion.available}</td><td>${promotion.promotype}</td></tr>`;
                 if (i == 0) {
-                    firstPromtion = promotion;
+                    firstPromotion = promotion;
                 }
             }
             table += '</tbody></table>';
             $("#search_results").append(table);
 
             // copy the first result to the form
-            if (firstPromtion != "") {
-                update_form_data(firstPromtion)
+            if (firstPromotion != "") {
+                update_form_data(firstPromotion)
             }
 
             flash_message("Success")

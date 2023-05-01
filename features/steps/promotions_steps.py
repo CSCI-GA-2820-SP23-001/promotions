@@ -31,11 +31,12 @@ from compare import expect
 def step_impl(context):
     """ Delete all Promotions and load new ones """
     # List all of the promotions and delete them one by one
-    rest_endpoint = f"{context.BASE_URL}/promotions"
+    rest_endpoint = f"{context.BASE_URL}/api/promotions"
     context.resp = requests.get(rest_endpoint)
     expect(context.resp.status_code).to_equal(200)
     for promotion in context.resp.json():
-        context.resp = requests.delete(f"{rest_endpoint}/{promotion['id']}")
+        context.resp = requests.delete(f"{rest_endpoint}/{promotion['id']}",
+                                       headers={'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7"})
         expect(context.resp.status_code).to_equal(204)
 
     # load the database with new promotions
@@ -46,5 +47,5 @@ def step_impl(context):
             "available": row['available'] in ['True', 'true', '1'],
             "promotype": row['promotype']
         }
-        context.resp = requests.post(rest_endpoint, json=payload)
+        context.resp = requests.post(rest_endpoint, json=payload, headers={'X-Api-Key': "133b94898f9b6c07ede6296e0ec197f7"})
         expect(context.resp.status_code).to_equal(201)
