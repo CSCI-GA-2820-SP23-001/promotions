@@ -100,7 +100,7 @@ Scenario: Activate a Promotion
     And I should see "CyberMonday" in the "Name" field
     And I should see "True" in the "Available" dropdown
 
-Scenario: Activate a Promotion
+Scenario: Deactivate a Promotion
     When I visit the "Home Page"
     And I set the "Name" to "CyberMonday"
     And I set the "Category" to "Event"
