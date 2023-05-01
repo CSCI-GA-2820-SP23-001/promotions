@@ -120,7 +120,7 @@ Scenario: Update a promotion category
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "holiday" in the "Category" field
-    When I set the "Category" to "seasonal"
+    When I change "Category" to "seasonal"
     And I press the "Update" button
     Then I should see the message "Success"
     When I copy the "Id" field
@@ -131,19 +131,18 @@ Scenario: Update a promotion category
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see the message "Success"
-    And I should see "christmas" in the results
-    And I should see "seasonal" in the results
-    And I should not see "holiday" in the results
-    And I should see "false" in the results
-    And I should see "Get 20% off" in the results
+    And I should see "christmas" in the "Name" field
+    And I should see "seasonal" in the "Category" field
+    And I should see "False" in the "Available" dropdown
+    And I should see "Buy one, get one free" in the "Promotype" dropdown
 
 Scenario: Update a promotion name
     When I visit the "Home Page"
     And I set the "Name" to "christmas"
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should see "seasonal" in the "Category" field
-    When I set the "Name" to "winterholiday"
+    And I should see "holiday" in the "Category" field
+    When I change "Name" to "winterholiday"
     And I press the "Update" button
     Then I should see the message "Success"
     When I copy the "Id" field
@@ -154,11 +153,10 @@ Scenario: Update a promotion name
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see the message "Success"
-    And I should see "winterholiday" in the results
-    And I should not see "christmas" in the results
-    And I should see "seasonal" in the results
-    And I should see "false" in the results
-    And I should see "Get 20% off" in the results
+    And I should see "winterholiday" in the "Name" field
+    And I should see "holiday" in the "Category" field
+    And I should see "False" in the "Available" dropdown
+    And I should see "Buy one, get one free" in the "Promotype" dropdown
 
 Scenario: Update a promotion type
     When I visit the "Home Page"
@@ -166,7 +164,7 @@ Scenario: Update a promotion type
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "Buy one, get one free" in the "Promotype" dropdown
-    When I set the "Promotype" to "Get 20% Off"
+    When I select "Get 20% off" in the "Promotype" dropdown
     And I press the "Update" button
     Then I should see the message "Success"
     When I copy the "Id" field
@@ -178,8 +176,5 @@ Scenario: Update a promotion type
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see the message "Success"
-    And I should see "christmas" in the "Name" field
-    And I should see "seasonal" in the results
-    And I should see "false" in the results
-    And I should see "Get 20% off" in the results
-    And I should not see "Buy one, get one free" in the results
+    And I should see "Get 20% off" in the "Promotype" dropdown
+    
