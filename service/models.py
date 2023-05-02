@@ -44,6 +44,10 @@ def init_db(app):
     Promotion.init_db(app)
 
 
+class DatabaseConnectionError(Exception):
+    """Custom Exception when database connection fails"""
+
+
 class DataValidationError(Exception):
     """Used for an data validation errors when deserializing"""
 
@@ -86,6 +90,8 @@ class Promotion(db.Model):
         """
         Creates a Promotion to the database
         """
+        if self.name is None:  # name is the only required field
+            raise DataValidationError("name attribute is not set")
         logger.info("Creating %s", self.name)
         # id must be none to generate next primary key
         self.id = None  # pylint: disable=invalid-name
